@@ -256,7 +256,7 @@ open class XML {
         self.parent = nil
     }
     
-    public convenience init!(data: Data) {
+    public convenience init(data: Data) throws {
         do {
             let parser = SimpleXMLParser(data: data)
             try parser.parse()
@@ -267,32 +267,32 @@ open class XML {
             }
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw error
         }
     }
     
-    public convenience init!(url: URL) {
+    public convenience init(url: URL) throws {
         do {
             let data = try Data(contentsOf: url)
-            self.init(data: data)
+            try self.init(data: data)
         } catch {
             print(error.localizedDescription)
-            return nil
+            throw error
         }
     }
     
-    public convenience init(named name: String) {
+    public convenience init(named name: String) throws {
         guard let url = Bundle.main.resourceURL?.appendingPathComponent(name) else {
             fatalError("can not get mainBundle URL")
         }
-        self.init(url: url)
+        try self.init(url: url)
     }
     
-    public convenience init(string: String, encoding: String.Encoding = .utf8) {
+    public convenience init(string: String, encoding: String.Encoding = .utf8) throws {
         guard let data = string.data(using: encoding) else {
             fatalError("string encoding failed")
         }
-        self.init(data: data)
+        try self.init(data: data)
     }
     
     public subscript(index: Int) -> XMLSubscriptResult {
